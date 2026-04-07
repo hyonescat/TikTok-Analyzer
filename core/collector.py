@@ -66,11 +66,24 @@ def _parse_netscape_cookies(content: str) -> list[dict]:
         if len(parts) < 7:
             continue
         domain, _, path, secure, expires, name, value = parts[:7]
+        # Playwright requires expires to be -1 (session) or a positive unix
+        # timestamp in seconds. Chrome exports microseconds for some cookies;
+        # cap anything > year 9999 (~32503680000s) down to -1 (session).
+        try:
+            exp = int(expires)
+            if exp <= 0:
+                exp = -1
+            elif exp > 32503680000:  # microsecond-range value
+                exp = exp // 1_000_000  # convert µs → s
+                if exp > 32503680000:   # still absurd → treat as session
+                    exp = -1
+        except (ValueError, TypeError):
+            exp = -1
         cookies.append({
             "name": name, "value": value,
             "domain": domain, "path": path,
             "secure": secure.upper() == "TRUE",
-            "expires": int(expires) if expires.isdigit() else -1,
+            "expires": exp,
         })
     return cookies
 
