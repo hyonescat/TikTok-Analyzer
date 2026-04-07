@@ -9,6 +9,7 @@ Analyze your TikTok favorites and liked videos locally. Extracts technologies, t
 
 ## Quick Start
 ```bash
+cp .env.example .env       # configure environment
 docker compose build
 docker compose up          # UI at http://localhost:8080
 ```
