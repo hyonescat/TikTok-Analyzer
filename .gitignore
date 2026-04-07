@@ -1,0 +1,13 @@
+cookies/
+transcripts/
+extractions/
+output/
+logs/
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+dist/
+node_modules/
+ui/dist/
+.DS_Store
