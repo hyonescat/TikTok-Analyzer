@@ -14,7 +14,7 @@ services:
       - ./logs:/app/logs
     environment:
       - OLLAMA_HOST=http://host.docker.internal:11434
-      - OLLAMA_MODEL=qwen2.5:7b
+      - OLLAMA_MODEL=qwen2.5:3b
       - WHISPER_MODEL=base
       - WHISPER_DEVICE=cpu
       - WHISPER_COMPUTE_TYPE=int8
