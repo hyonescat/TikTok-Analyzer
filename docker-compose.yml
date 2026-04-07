@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    volumes:
+      - ./transcripts:/app/transcripts
+      - ./extractions:/app/extractions
+      - ./output:/app/output
+      - ./cookies:/app/cookies:ro
+      - ./logs:/app/logs
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - OLLAMA_MODEL=qwen2.5:7b
+      - WHISPER_MODEL=base
+      - WHISPER_DEVICE=cpu
+      - WHISPER_COMPUTE_TYPE=int8
+      - MAX_RETRIES=3
+      - RATE_LIMIT_DELAY=2.5
+    networks:
+      - analyzer_net
+
+  ui:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    platform: linux/arm64
+    ports:
+      - "8080:8080"
+    depends_on:
+      - analyzer
+    networks:
+      - analyzer_net
+
+networks:
+  analyzer_net:
